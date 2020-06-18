@@ -34,8 +34,20 @@ app.get('./api/users/auth', auth, (req,res)=>{
     });
 })
 
+app.get('/api/users/logout', auth, (req,res)=>{
+    ///since for logout user must first already be logged in ie. authenticated
+    ///THEREFORE we add the "auth" middleware
+    User.findOneAndUpdate(
+        { _id: req.user._id},
+        {token:''},  ///token is updated to null
+        (err,doc)=>{
+            if(err) return res.json({success:false, err});
+            //else
+            return res.status(200).json({success:true});
+        }
+    )
+});
 
-/////users route
 //register route
 app.post('/api/users/register',(req,res)=> {
     const user = new User(req.body);
