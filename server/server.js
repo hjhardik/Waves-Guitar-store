@@ -19,6 +19,22 @@ mongoose.connect(`${process.env.DATABASE}`,{useNewUrlParser:true, useUnifiedTopo
 /////models
 const {User} = require('./models/Users');
 
+/////middleware
+const {auth} = require('./middleware/auth');
+
+app.get('./api/users/auth', auth, (req,res)=>{
+    res.status(200).json({
+        isAdmin : req.user.role===0? false:true,
+        isAuth:true,
+        email:req.user.email,
+        firstName:req.user.firstName,
+        lastName:req.user.lastName,
+        cart:req.user.cart,
+        history:req.user.history 
+    });
+})
+
+
 /////users route
 //register route
 app.post('/api/users/register',(req,res)=> {
@@ -29,7 +45,6 @@ app.post('/api/users/register',(req,res)=> {
         }else{
             return res.status(200).json({
                 success:true,
-                userdata : savedUser
             })
         }
     });
