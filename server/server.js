@@ -20,7 +20,7 @@ mongoose.connect(`${process.env.DATABASE}`,{useNewUrlParser:true, useUnifiedTopo
 const {User} = require('./models/Users');
 
 /////users route
-
+//register route
 app.post('/api/users/register',(req,res)=> {
     const user = new User(req.body);
     user.save((err, savedUser)=>{
@@ -33,13 +33,34 @@ app.post('/api/users/register',(req,res)=> {
             })
         }
     });
+});
 
-
-})
-
+//login route
 app.post('/api/users/login', (req,res)=> {
-    
-})
+    User.findOne({'email':req.body.email}, (err,user){
+        if(!user){
+            return res.json({login:false, message:"email not registered"});
+        }else{
+            user.comparePassword(req.body.password,(err,isMatch) => {
+                if(!isMatch){
+                    return res.json({login:false, message:"wrong password"});
+                }else{
+                    user.generateToken((err,user) => {
+                        if(err){
+                            return res.status(400).send(err);
+                        }else{
+                            res.cookie('w_auth', user.token).status(200).json({login:"success"});
+                        };
+                    })
+                };
+            });     
+        };
+});
+
+
+
+
+
 
 const port = process.env.PORT || 3002;
 
