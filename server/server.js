@@ -18,9 +18,63 @@ mongoose.connect(`${process.env.DATABASE}`,{useNewUrlParser:true, useUnifiedTopo
 
 /////models
 const {User} = require('./models/Users');
+const {Brand} = require('./models/Brands');
+const {Wood} = require('./models/Woods');
 
 /////middleware
-const {auth} = require('./middleware/auth');
+const {auth} = require('./middleware/auth');     //to check if the request is authenticated i.e. if the user is logged in
+const {admin} = require('./middleware/admin');   //to check if the user is admin
+
+
+/////////////////////////
+///////////// BRANDS
+/////////////////////////
+app.post('/api/products/brand',auth,admin, (req,res)=>{
+    const brand = new Brand(req.body);
+
+    brand.save((err,doc)=>{
+        if(err) return res.json({success:false,err});
+        //else
+        res.status(200).json({
+            success:true,
+            brand:doc
+        })
+    })
+})
+
+app.get('/api/products/brands',(req,res)=>{
+    Brand.find({}, (err,brands)=>{
+        if(err) return res.status(400).send(err);
+        res.status(200).send(brands);
+    })
+});
+
+/////////////////////////
+///////////// WOODS
+/////////////////////////
+app.post('/api/products/wood',auth,admin, (req,res)=>{
+    const wood = new Wood(req.body);
+
+    wood.save((err,doc)=>{
+        if(err) return res.json({success:false,err});
+        //else
+        res.status(200).json({
+            success:true,
+            wood:doc
+        })
+    })
+})
+
+app.get('/api/products/woods',(req,res)=>{
+    Wood.find({}, (err,woods)=>{
+        if(err) return res.status(400).send(err);
+        res.status(200).send(woods);
+    })
+});
+
+////////////////////////
+////////////  USERS
+////////////////////////
 
 app.get('./api/users/auth', auth, (req,res)=>{
     res.status(200).json({
