@@ -20,6 +20,7 @@ mongoose.connect(`${process.env.DATABASE}`,{useNewUrlParser:true, useUnifiedTopo
 const {User} = require('./models/Users');
 const {Brand} = require('./models/Brands');
 const {Wood} = require('./models/Woods');
+const {Product} = require('./models/Products');
 
 /////middleware
 const {auth} = require('./middleware/auth');     //to check if the request is authenticated i.e. if the user is logged in
@@ -71,6 +72,70 @@ app.get('/api/products/woods',(req,res)=>{
         res.status(200).send(woods);
     })
 });
+
+/////////////////////////
+///////////// PRODUCTS
+/////////////////////////
+app.post('/api/products/articles',auth,admin, (req,res)=>{
+    const product = new Product(req.body);
+
+    product.save((err,doc)=>{
+        if(err) return res.json({success:false,err});
+        //else
+        res.status(200).json({
+            success:true,
+            product:doc
+        })
+    })
+})
+
+////  '/api/product/article?id=HSHSHKG,JSJSJS,SDSDSD&type=array' or type=single if only one id is present 
+app.get('/api/product/articles_by_id',(req,res)=>{   //searching for products by id
+    let type = req.query.type;
+    let items = [];
+    
+    if(type === 'array'){
+        let ids = req.query.id.split(',')  ///splitting different ids present in the request attributes
+        items = [];
+        items = ids.map(item=>{
+            return mongoose.Types.ObjectId(item);   //converting each id into mongoose '_id' type
+        });
+    }
+
+    Product.find({'_id':{$in:items}}).
+    populate('brand').    ///as the brand field contains the id of object, it will populate the brand field with brand model data     
+    populate('wood').     ///populates the wood field with wood model data fields
+    exec((err,docs)=>{
+        return res.status(200).send(docs);
+    })
+});
+
+/////SORTING AND SEARCHING
+
+//BY ARRIVAL
+// '/articles?sortBy=createdAt&order=desc&limit=5'
+
+//BY SELL
+// '/articles?sortBy=sold&order=desc&limit=100&skip=5'
+
+app.get('/api/product/articles',(req,res)=>{
+    let order = req.query.order?req.query.order : 'asc';  //if order attribute is present then it will use it otherwise default is ascending order
+    let sortBy = req.query.sortBy?req.query.sortBy : '_id';
+    let limit = req.query.limit?parseInt(req.query.limit) : 100;
+                    ///usinfg parseInt because by default it will be in string
+    Product.
+    find().
+    populate('brand').
+    populate('wood').
+    sort([[sortBy,order]]).
+    limit(limit).
+    exec((err,articles)=>{
+        if(err) return res.status(400).send(err);
+        //else
+        res.send(articles);
+    })
+});
+
 
 ////////////////////////
 ////////////  USERS
