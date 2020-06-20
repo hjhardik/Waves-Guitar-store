@@ -1,11 +1,13 @@
 import React from 'react';
 
-function Layout(){
+function Layout(props){
     return(
         <div>
+            Header
             <div className="page_container">
-                {this.props.children}
+                {props.children}
             </div>
+            Footer
         </div>
     )
 };
