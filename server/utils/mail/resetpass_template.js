@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const resetPass = data => {
 
-    const URL = process.env.NODE_ENV === 'production' ? process.env.ROOT_URL: 'http://localhost:3000';
+  const URL = process.env.NODE_ENV === 'production' ? process.env.ROOT_URL: 'http://localhost:3000';
 
 
   return `
@@ -28,7 +28,7 @@ const resetPass = data => {
                    <tr>
                         <td style="background-color: #999592; margin: 0 auto;">
                                 <p style="box-sizing: border-box; color: white; font-family: Helvetica, Arial, sans-serif; letter-spacing: 0.5px; line-height: 1.4; margin: 0; padding: 15px 25px; text-align: center; text-transform: uppercase;font-size:10px">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                    If the request is not made by you, please contact the admin.
                                 </p></td>
                    </tr>
                </table>
