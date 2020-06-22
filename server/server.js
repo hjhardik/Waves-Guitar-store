@@ -176,11 +176,8 @@ app.get('/api/product/articles_by_id',(req,res)=>{   //searching for products by
             return mongoose.Types.ObjectId(item);   //converting each id into mongoose '_id' type
         });
     }
-
-    Product.find({'_id':{$in:items}}). //{ field: { $in: [<value1>, <value2>, ... <valueN> ] } }
-                                       //If the field holds an array, then the $in operator selects
-                                       //the documents whose field holds an array that contains at least one element that matches a value in the specified array (e.g. <value1>, <value2>, etc.)
-    
+                                       //{ field: { $in: [<value1>, <value2>, ... <valueN> ] } }
+    Product.find({'_id':{$in:items}}). //If the field holds an array, then the $in operator selects//the documents whose field holds an array that contains at least one element that matches a value in the specified array (e.g. <value1>, <value2>, etc.)
     populate('brand').    ///as the brand field contains the id of object, it will populate the brand field with brand model data     
     populate('wood').     ///populates the wood field with wood model data fields
     exec((err,docs)=>{
