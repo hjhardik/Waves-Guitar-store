@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const SALT = 10;
+const crypto = require('crypto');
+const moment = require("moment");
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
@@ -41,7 +43,12 @@ const userSchema = mongoose.Schema({
     },
     token:{
         type:String
-    }
+    },
+    resetToken:{
+        type:String
+    },
+    resetTokenExp:{
+        type:Number
 });
 
 userSchema.pre('save', function(next){    ///before "save" is performed by server.js' user.save() function, this function will run
@@ -70,6 +77,26 @@ userSchema.methods.comparePassword = function(candidatePassword, cb){     ///met
     });
 };
 
+
+///// password reset token
+userSchema.methods.generateResetToken = function(cb){
+    var user = this;
+
+    crypto.randomBytes(20,function(err,buffer){
+        var token = buffer.toString('hex');
+        var today = moment().startOf('day').valueOf();
+        var tomorrow = moment(today).endOf('day').valueOf();
+
+        user.resetToken = token;
+        user.resetTokenExp = tomorrow;
+        user.save(function(err,user){
+            if(err) return cb(err);
+            cb(null,user);
+        })
+    })
+}
+
+///generate token each time for login
 userSchema.methods.generateToken = function(cb){   //cb is the callback function
     var user = this;
     var token = jwt.sign(user._id.toHexString(), process.env.SECRET);

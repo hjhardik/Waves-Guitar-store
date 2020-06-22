@@ -12,7 +12,7 @@ let auth = (req,res,next) => {  ///next is used to go to terminate this function
 
         req.token = token;
         req.user = user;
-        next(); ///goes to the next function i.e. line 25 (req,res)=>{} which is present after "auth" 
+        next(); ///goes to the next function i.e. (req,res)=>{......} which is present after "auth" 
     });
 };
 
