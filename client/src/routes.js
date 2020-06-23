@@ -23,7 +23,11 @@ import AddFile from './components/User/Admin/add_file';
 import PageNotFound from './components/utils/page_not_found';
 
 
-const Routes = () => {
+///WHAT IS PASSED inside AUTH COMPONENT
+///for complete private routes, true is passed 
+///for in-between routes i.e. routes that are not shown when the user is logged in i.e. authenticated, false is passed
+///for completely public routes, null is passed
+const Routes = () => {                          
   return(
     <Layout>
       <Switch>
