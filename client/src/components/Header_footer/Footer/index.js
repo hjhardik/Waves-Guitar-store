@@ -8,6 +8,7 @@ import faEnvelope from '@fortawesome/fontawesome-free-solid/faEnvelope';
 
 
 const Footer = (data) => {
+    console.log(data);
     return (
         data.siteData ?
         <footer className="bck_b_dark">
