@@ -49,6 +49,7 @@ const userSchema = mongoose.Schema({
     },
     resetTokenExp:{
         type:Number
+    }    
 });
 
 userSchema.pre('save', function(next){    ///before "save" is performed by server.js' user.save() function, this function will run

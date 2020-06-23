@@ -5,7 +5,7 @@ import UserProductBlock from '../utils/User/product_block';
 import { connect } from 'react-redux';
 import { getCartItems, removeCartItem ,onSuccessBuy} from '../../actions/user_actions';
 
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import faFrown from '@fortawesome/fontawesome-free-solid/faFrown'
 import faSmile from '@fortawesome/fontawesome-free-solid/faSmile'
 

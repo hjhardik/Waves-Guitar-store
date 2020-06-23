@@ -6,8 +6,8 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { loginUser } from '../../actions/user_actions';
 
-function Login() {
-    state = {
+function Login(props) {
+    const state = {
         formError: false,
         formSuccess:'',
         formdata:{
@@ -46,7 +46,7 @@ function Login() {
     }
 
     const [newState, setNewState] = useState(state)
-    updateForm = (element) => {
+    const updateForm = (element) => {
         const newFormdata = update(element, newState.formdata,'login');
         setNewState({
             formError: false,
@@ -55,7 +55,7 @@ function Login() {
     }
 
 
-    submitForm= (event) =>{
+    const submitForm= (event) =>{
         event.preventDefault();
         
         let dataToSubmit = generateData(newState.formdata,'login');

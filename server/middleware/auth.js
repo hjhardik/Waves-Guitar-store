@@ -1,4 +1,4 @@
-const {User} = require('./../models/Users');
+const {User} = require('./../models/user');
 
 let auth = (req,res,next) => {  ///next is used to go to terminate this function 
                                ///and move over to the next instruction which is

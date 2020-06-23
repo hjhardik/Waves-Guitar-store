@@ -20,19 +20,19 @@ function ProdImg(props) {
     })
 
 
-    handleLightBox = (pos) => {
+    const handleLightBox = (pos) => {
         if(lightboxImages.length > 0){
             setLightbox(true);
             setImagePos(pos);         
         }
     }
 
-    handleLightBoxClose = () => {
+    const handleLightBoxClose = () => {
         setLightbox(false)
     }
 
 
-    showThumbs = () => (
+    const showThumbs = () => (
         lightboxImages.map((item,i)=>(
             i > 0 ?
                 <div
@@ -46,7 +46,7 @@ function ProdImg(props) {
     )
 
 
-    renderCardImage = (images) => {
+    const renderCardImage = (images) => {
         if(images.length > 0){
             return images[0].url
         }else{
@@ -72,7 +72,6 @@ function ProdImg(props) {
                         <ImageLightBox
                             id={detail.id}
                             images={lightboxImages}
-                            open={open}
                             pos={imagePos}
                             onclose={()=> handleLightBoxClose()}
                         />
