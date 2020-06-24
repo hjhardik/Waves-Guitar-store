@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react';
+import React, { Component } from 'react';
 import PageTop from '../utils/page_top';
 
 import ProdNfo from './prodNfo';
@@ -8,24 +8,27 @@ import { connect } from 'react-redux';
 import { addToCart } from '../../actions/user_actions';
 import { getProductDetail, clearProductDetail } from '../../actions/products_actions';
 
-function ProductPage(props) {
+class ProductPage extends Component {
 
-    useEffect(() => {
-        const id = props.match.params.id;
-        props.dispatch(getProductDetail(id)).then(()=>{
-            if(!props.products.prodDetail){
-                props.history.push('/');
+    componentDidMount(){
+        const id = this.props.match.params.id;
+        this.props.dispatch(getProductDetail(id)).then(()=>{
+            if(!this.props.products.prodDetail){
+                this.props.history.push('/');
             }
         })
-        return(
-            props.dispatch(clearProductDetail())
-        )
-    });
+    }
 
-    function addToCartHandler(id){
-        props.dispatch(addToCart(id))
+    componentWillUnmount(){
+        this.props.dispatch(clearProductDetail())
+    }
+
+
+    addToCartHandler(id){
+        this.props.dispatch(addToCart(id))
     }
     
+    render() {
         return (
             <div>
                 <PageTop
@@ -33,19 +36,19 @@ function ProductPage(props) {
                 />
                 <div className="container">
                 {
-                    props.products.prodDetail ?
+                    this.props.products.prodDetail ?
                     <div className="product_detail_wrapper">
                         <div className="left">
                             <div style={{width:'500px'}}>
                                 <ProdImg
-                                    detail={props.products.prodDetail}
+                                    detail={this.props.products.prodDetail}
                                 />
                             </div>
                         </div>
                         <div className="right">
                             <ProdNfo
-                                addToCart={(id)=> addToCartHandler(id)}
-                                detail={props.products.prodDetail}
+                                addToCart={(id)=> this.addToCartHandler(id)}
+                                detail={this.props.products.prodDetail}
                             />
                         </div>
                     </div>
@@ -55,8 +58,8 @@ function ProductPage(props) {
                 </div>                
             </div>
         );
-    };
-
+    }
+}
 
 const mapStateToProps = (state) => {
     return {

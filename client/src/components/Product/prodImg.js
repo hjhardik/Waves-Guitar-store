@@ -1,43 +1,54 @@
-import React, { useState, useEffect } from 'react';
+import React, { Component } from 'react';
 import ImageLightBox from '../utils/lightbox';
 
 
-function ProdImg(props) {
-    const [lightbox, setLightbox] = useState(false);
-    const [imagePos, setImagePos] = useState(0);
-    const [lightboxImages, setLightboxImages] = useState([])
-    
-    useEffect(() => {
-        if(props.detail.images.length > 0){
+class ProdImg extends Component {
+
+    state = {
+        lightbox: false,
+        imagePos:0,
+        lightboxImages:[]
+    }
+
+
+
+    componentDidMount(){
+        if(this.props.detail.images.length > 0){
             let lightboxImages = [];
 
-            props.detail.images.forEach(item=>{
+            this.props.detail.images.forEach(item=>{
                 lightboxImages.push(item.url)
             })
 
-            setLightboxImages(lightboxImages);
-        }
-    })
-
-
-    const handleLightBox = (pos) => {
-        if(lightboxImages.length > 0){
-            setLightbox(true);
-            setImagePos(pos);         
+            this.setState({
+                lightboxImages
+            })
         }
     }
 
-    const handleLightBoxClose = () => {
-        setLightbox(false)
+
+    handleLightBox = (pos) => {
+        if(this.state.lightboxImages.length > 0){
+            this.setState({
+                lightbox: true,
+                imagePos: pos
+            })
+        }
+    }
+
+    handleLightBoxClose = () => {
+        this.setState({
+            lightbox: false
+        })
     }
 
 
-    const showThumbs = () => (
-        lightboxImages.map((item,i)=>(
+    showThumbs = () => (
+        this.state.lightboxImages.map((item,i)=>(
             i > 0 ?
                 <div
                     key={i}
-                    onClick={()=> handleLightBox(i)}
+                    onClick={()=> this.handleLightBox(i)}
                     className="thumb"
                     style={{background: `url(${item}) no-repeat`}}
                 ></div>
@@ -46,7 +57,7 @@ function ProdImg(props) {
     )
 
 
-    const renderCardImage = (images) => {
+    renderCardImage = (images) => {
         if(images.length > 0){
             return images[0].url
         }else{
@@ -54,31 +65,34 @@ function ProdImg(props) {
         }
     }
 
-        const {detail} = props;
+    render() {
+        const {detail} = this.props;
         return (
             <div className="product_image_container">
                 <div className="main_pic">
                     <div
-                        style={{background:`url(${renderCardImage(detail.images)}) no-repeat`}} 
-                        onClick={()=> handleLightBox(0)}
+                        style={{background:`url(${this.renderCardImage(detail.images)}) no-repeat`}} 
+                        onClick={()=> this.handleLightBox(0)}
                     >
                     </div>
                 </div>
                 <div className="main_thumbs">
-                    { showThumbs(detail)}
+                    { this.showThumbs(detail)}
                 </div>
                 {
-                    lightbox ?
+                    this.state.lightbox ?
                         <ImageLightBox
                             id={detail.id}
-                            images={lightboxImages}
-                            pos={imagePos}
-                            onclose={()=> handleLightBoxClose()}
+                            images={this.state.lightboxImages}
+                            open={this.state.open}
+                            pos={this.state.imagePos}
+                            onclose={()=> this.handleLightBoxClose()}
                         />
                     :null
                 }
             </div>
         );
     }
+}
 
 export default ProdImg;
