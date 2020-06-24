@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { getSiteData } from '../actions/site_actions';
 
 function Layout (props) {
+    console.log('XXXXXXXXXXXXXXX',props);
     useEffect(()=>{
         if(Object.keys(props.site).length === 0){
             props.dispatch(getSiteData());
