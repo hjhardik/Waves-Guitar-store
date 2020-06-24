@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 import FormField from '../utils/Form/formfield';
 import { update, generateData, isFormValid } from '../utils/Form/formActions';
 import { withRouter } from 'react-router-dom';
@@ -6,8 +6,9 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { loginUser } from '../../actions/user_actions';
 
-function Login(props) {
-    const state = {
+class Login extends Component {
+
+    state = {
         formError: false,
         formSuccess:'',
         formdata:{
@@ -45,55 +46,56 @@ function Login(props) {
         }
     }
 
-    const [newState, setNewState] = useState(state)
-    const updateForm = (element) => {
-        const newFormdata = update(element, newState.formdata,'login');
-        setNewState({
+    updateForm = (element) => {
+        const newFormdata = update(element,this.state.formdata,'login');
+        this.setState({
             formError: false,
             formdata: newFormdata
         })
     }
 
 
-    const submitForm= (event) =>{
+    submitForm= (event) =>{
         event.preventDefault();
         
-        let dataToSubmit = generateData(newState.formdata,'login');
-        let formIsValid = isFormValid(newState.formdata,'login')
+        let dataToSubmit = generateData(this.state.formdata,'login');
+        let formIsValid = isFormValid(this.state.formdata,'login')
 
         if(formIsValid){
             this.props.dispatch(loginUser(dataToSubmit)).then(response =>{
                 if(response.payload.loginSuccess){
                     console.log(response.payload);
-                    props.history.push('/user/dashboard')
+                    this.props.history.push('/user/dashboard')
                 }else{
-                    setNewState({
+                    this.setState({
                         formError: true
                     })
                 }
             });
 
         } else {
-            setNewState({
+            this.setState({
                 formError: true
             })
         }
     }
 
+
+    render() {
         return (
             <div className="signin_wrapper">
-                <form onSubmit={(event)=> submitForm(event)}>
+                <form onSubmit={(event)=> this.submitForm(event)}>
 
                     <FormField
                         id={'email'}
-                        formdata={newState.formdata.email}
-                        change={(element)=> updateForm(element)}
+                        formdata={this.state.formdata.email}
+                        change={(element)=> this.updateForm(element)}
                     />
 
                     <FormField
                         id={'password'}
-                        formdata={newState.formdata.password}
-                        change={(element)=> updateForm(element)}
+                        formdata={this.state.formdata.password}
+                        change={(element)=> this.updateForm(element)}
                     />
 
                     { this.state.formError ?
@@ -101,12 +103,12 @@ function Login(props) {
                             Please check your data
                         </div>
                     :null}
-                    <button onClick={(event)=> submitForm(event)}>
+                    <button onClick={(event)=> this.submitForm(event)}>
                         Log in
                     </button>
                     <button 
                         style={{marginLeft:'10px'}}
-                        onClick={()=> props.history.push('/reset_user') }>
+                        onClick={()=> this.props.history.push('/reset_user') }>
                        Forgot my password
                     </button>
 
@@ -115,6 +117,6 @@ function Login(props) {
             </div>
         );
     }
-
+}
 
 export default connect()(withRouter(Login));
